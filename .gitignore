@@ -7,3 +7,5 @@
 # Укажите файлы или папки, которые НУЖНО оставить
 !*.js
 !README.md
+!package.json
+!package-lock.json

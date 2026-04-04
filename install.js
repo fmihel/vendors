@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const {unzip} = require('./src/unzip');
+
 const {
     projectPath,
     projectName,
@@ -45,15 +47,8 @@ try {
          fs.mkdirSync(distPath, { recursive: true });
     }
 
+    unzip(archPath,distPath);
    
-    if (process.platform === 'win32') {
-        // Windows PowerShell
-        execSync(`powershell -Command "Expand-Archive -Path '${archPath}' -DestinationPath '${distPath}' -Force"`);
-    } else {
-        // Linux / macOS
-        execSync(`unzip -o "${archPath}" -d "${distPath}"`);
-    }
-
 
 } catch (err) {
     console.error(`Ошибка: ${err.message}`);

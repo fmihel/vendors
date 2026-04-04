@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const {zip }= require('./src/zip');
 const { execSync } = require('child_process');
+
 const {
     projectPath,
     projectName,
