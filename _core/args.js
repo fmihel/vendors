@@ -1,0 +1,29 @@
+function getArgs() {
+    const args = {};
+    const rawArgs = process.argv.slice(2);
+
+    for (let i = 0; i < rawArgs.length; i++) {
+        const arg = rawArgs[i];
+
+        // Если нашли ключ (начинается с -)
+        if (arg.startsWith('-')) {
+            const key = arg.slice(1); // убираем дефис
+            const nextValue = rawArgs[i + 1];
+
+            // Если следующее значение существует и не является новым ключом
+            if (nextValue && !nextValue.startsWith('-')) {
+                args[key] = nextValue;
+                i++; // Пропускаем значение, так как мы его уже забрали
+            } else {
+                args[key] = true; // Для флагов без значения
+            }
+        }
+    }
+    return args;
+}
+
+const out = getArgs();
+
+module.exports = {
+    args: out,
+};
