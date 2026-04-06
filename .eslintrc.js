@@ -28,6 +28,7 @@ module.exports = {
         'import/no-unresolved': 'off',
         'no-underscore-dangle': 'off',
         'max-len': 'off',
+        'linebreak-style': 'off',
         indent: [
             'error',
             4,

@@ -4,7 +4,7 @@ const { execSync } = require('child_process');
 const { args } = require('./args');
 
 const o = args.operation ? args.operation : args.o;
-const operation = o || 'update'; // тип действия update || install
+const operation = o || 'info'; // тип действия update || install || info || help || ?
 
 const p = args.project ? args.project : args.p;
 const projectPath = p || process.cwd(); // маршрут к текущему проекту
