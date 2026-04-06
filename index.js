@@ -5,7 +5,6 @@ const { unzip } = require('./_core/unzip');
 const { zip } = require('./_core/zip');
 const { renameWithDate } = require('./_core/renameWithDate');
 const { version } = require('./_core/version');
-
 /**
  * устанавливаем сохраненные архивы
  * Ex: автоопределение ветки и пути к архиву ( архивы лежат тамже где и скрипты )
@@ -46,7 +45,6 @@ try {
         console.log('  from   :', params.distPath);
         console.log('  to     :', params.archPath);
         console.log('--------------------------');
-
         renameWithDate(params.archPath);
         zip(
             path.join(params.distPath, 'vendor'),

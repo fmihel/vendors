@@ -46,14 +46,13 @@ if (a) {
     archPath = path.resolve(path.join(dirname, projectName, mode, `${branch}.zip`));
     if (operation === 'install') {
         if (!fs.existsSync(archPath)) {
-        // eslint-disable-next-line array-callback-return, consistent-return
-            ['main', 'master'].find((br) => {
-                const other = path.resolve(path.join(dirname, projectName, mode, `${br}.zip`));
-                if (fs.existsSync(other)) {
-                    archPath = other;
-                    return true;
-                }
-            });
+            // ['main', 'master'].find((br) => {
+            //     const other = path.resolve(path.join(dirname, projectName, mode, `${br}.zip`));
+            //     if (fs.existsSync(other)) {
+            //         archPath = other;
+            //         return true;
+            //     }
+            // });
         }
     }
 }
