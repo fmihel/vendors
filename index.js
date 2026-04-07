@@ -61,7 +61,7 @@ try {
     } else if (params.operation === 'help' || params.operation === '?') {
         console.log(`vendors ${version()} help ---------------------------------------------`);
         console.log('полный список опций');
-        console.log('  -o[opartion]   - тип операции update или install (default = update');
+        console.log('  -o[operation]   - тип операции update, install, clear');
         console.log('  -p[roject]     - маршрут к проекту ( по умолчанию там где запускаем install');
         console.log('  -n[ame]        - имя проекта (папка в корневой папке архива');
         console.log('  -a[rch]        - путь к архиву ( если задать, то след парметры будут игнориться');
