@@ -1,13 +1,16 @@
-# vendors
+## vendors 
+```v0.0.1```\
 cache, zip, backup, packagist, composer, php
 
 #### Сохранение и использование готовых билдов composer
 
 #### Установка
 ```bash
-$ git clone git@github.com:fmihel/vendors.git
+$ git clone git@github.com:fmihel/vendors.git 
+$ cd ./vendors 
+$ npm i
 ```
-далее используется следующая файловая структура :
+далее для примера используется следующая файловая структура :
 ```
  |--path
      |--vendors
@@ -18,25 +21,30 @@ $ git clone git@github.com:fmihel/vendors.git
 ```
 
 использование ( при нахождении в папке ``project``)
-#### Сохранение созданных билдов
-#### development
+#### Сохранение/обновление созданных vendor папок
 ```bash
-$ node ../vendors -m dev
-```
-#### production
-```bash
-$ node ../vendors -m prod
+# development
+$ node ../vendors -o update -m dev
+# production
+$ node ../vendors -o update -m prod
 ```
 #### Установка сохраненных билдов
-#### development
 ```bash
+# development
 $ node ../vendors -o install -m dev
-```
-#### production
-```bash
+# production
 $ node ../vendors -o install -m prod
 ```
+#### Очистка архива
+Будут удалены все архивы для несуществующих(удаленных) в текущем проекте веток git
+```bash
+$ node ../vendors -o clear
+```
 
+#### Получить подсказку по все командам
+```bash
+$ node ../vendors -o help
+```
 
 
 

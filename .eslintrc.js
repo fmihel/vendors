@@ -14,6 +14,9 @@ module.exports = {
         },
         ecmaVersion: 2018,
         sourceType: 'module',
+        babelOptions: {
+            configFile: './.babelrc', // или абсолютный путь, если относительный не сработает
+        },
     },
     rules: {
         'no-console': 'off',
