@@ -81,6 +81,9 @@ try {
         console.log('----------------------------------------------------------------');
     }
 } catch (err) {
-    console.error(`Ошибка: ${err.message}`);
+    const red = "\x1b[31m";
+    const reset = "\x1b[0m";
+    console.error(`${red}Ошибка: ${err.message}${reset}`);
+    // console.error(`Ошибка: ${err.message}`);
     process.exit(1);
 }
