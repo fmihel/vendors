@@ -1,10 +1,10 @@
-const crypto = require('crypto');
-const fs = require('fs');
+import { createHash } from 'crypto';
+import { createReadStream, statSync } from 'fs';
 
 function getHash(path) {
     return new Promise((resolve, reject) => {
-        const hash = crypto.createHash('md5');
-        const stream = fs.createReadStream(path);
+        const hash = createHash('md5');
+        const stream = createReadStream(path);
         stream.on('data', (data) => hash.update(data));
         stream.on('end', () => resolve(hash.digest('hex')));
         stream.on('error', reject);
@@ -13,8 +13,8 @@ function getHash(path) {
 
 async function compareFiles(file1, file2) {
     // Сначала проверяем размер — если он разный, файлы точно отличаются
-    const stats1 = fs.statSync(file1);
-    const stats2 = fs.statSync(file2);
+    const stats1 = statSync(file1);
+    const stats2 = statSync(file2);
 
     if (stats1.size !== stats2.size) return false;
 
@@ -23,4 +23,4 @@ async function compareFiles(file1, file2) {
     return hash1 === hash2;
 }
 
-module.exports = { compareFiles };
+export default compareFiles;

@@ -1,11 +1,21 @@
-const fs = require('fs');
-const path = require('path');
-const params = require('./_core/params');
-const { unzip } = require('./_core/unzip');
-const { zip } = require('./_core/zip');
-const { renameWithDate } = require('./_core/renameWithDate');
-const { version } = require('./_core/version');
-const { branches } = require('./_core/branches');
+/* eslint-disable prefer-destructuring */
+import {
+    existsSync, mkdirSync, readdirSync, unlinkSync,
+} from 'fs';
+import { join, dirname, extname } from 'path';
+import { fileURLToPath } from 'url';
+import params from './_core/params.js';
+import unzip from './_core/unzip.js';
+import zip from './_core/zip.js';
+import renameWithDate from './_core/renameWithDate.js';
+import version from './_core/version.js';
+import branches from './_core/branches.js';
+import define from './_core/define.js';
+
+const {
+    operation, branch, mode, archPath, distPath, projectName, projectPath,
+} = params;
+
 /**
  * устанавливаем сохраненные архивы
  * Ex: автоопределение ветки и пути к архиву ( архивы лежат тамже где и скрипты )
@@ -27,38 +37,40 @@ const { branches } = require('./_core/branches');
 // путь к папке где запускаем
 // process.cwd();
 
+define.require_main_filename = import.meta.filename;
+
 try {
-    if (params.operation === 'install') {
+    if (operation === 'install') {
         console.log('vendors install ----------');
-        console.log('  branch :', params.branch);
-        console.log('  mode   :', params.mode);
-        console.log('  from   :', params.archPath);
-        console.log('  to     :', params.distPath);
+        console.log('  branch :', branch);
+        console.log('  mode   :', mode);
+        console.log('  from   :', archPath);
+        console.log('  to     :', distPath);
         console.log('--------------------------');
 
-        if (!fs.existsSync(params.archPath)) {
-            throw new Error(`Архив не найден: ${params.archPath}`);
+        if (!existsSync(archPath)) {
+            throw new Error(`Архив не найден: ${archPath}`);
         }
 
-        if (!fs.existsSync(params.distPath)) {
-            fs.mkdirSync(params.distPath, { recursive: true });
+        if (!existsSync(distPath)) {
+            mkdirSync(distPath, { recursive: true });
         }
-        unzip(params.archPath, params.distPath);
-    } else if (params.operation === 'update') {
+        unzip(archPath, distPath);
+    } else if (operation === 'update') {
         console.log('vendors update -----------');
-        console.log('  branch :', params.branch);
-        console.log('  mode   :', params.mode);
-        console.log('  from   :', params.distPath);
-        console.log('  to     :', params.archPath);
+        console.log('  branch :', branch);
+        console.log('  mode   :', mode);
+        console.log('  from   :', distPath);
+        console.log('  to     :', archPath);
         console.log('--------------------------');
 
-        renameWithDate(params.archPath);
+        renameWithDate(archPath);
         zip(
-            path.join(params.distPath, 'vendor'),
-            `${params.branch}.zip`,
-            path.dirname(params.archPath),
+            join(distPath, 'vendor'),
+            `${branch}.zip`,
+            dirname(archPath),
         );
-    } else if (params.operation === 'help' || params.operation === '?') {
+    } else if (operation === 'help' || operation === '?') {
         console.log(`vendors ${version()} help ---------------------------------------------`);
         console.log('полный список опций');
         console.log('  -o[operation]   - тип операции update, install, clear');
@@ -75,19 +87,19 @@ try {
         console.log('  $ node ../../vendors -o install');
         console.log('');
         console.log('----------------------------------------------------------------');
-    } else if (params.operation === 'clear') {
-        const dirname = path.dirname(require.main.filename);
+    } else if (operation === 'clear') {
+        const namedir = dirname(define.require_main_filename);
         const bs = branches(); // существующие ветки
         // const exists = []; // существующие сохраненные ветки, но несуществуюющие в branches (по именам zip фалов в папках prod и dev)
         const files = []; // список файлов к удалению
 
-        ['prod', 'dev'].map((mode) => {
-            const dir = path.join(dirname, params.projectName, mode);
-            const zips = fs.readdirSync(dir).filter((file) => path.extname(file).toLowerCase() === '.zip');
+        ['prod', 'dev'].map((md) => {
+            const dir = join(namedir, projectName, md);
+            const zips = readdirSync(dir).filter((file) => extname(file).toLowerCase() === '.zip');
             zips.map((name) => {
                 const index = name.replace(/(_\d{6})?\.zip$/, '');
                 if (bs.indexOf(index) === -1) {
-                    files.push(path.join(dir, name));
+                    files.push(join(dir, name));
                     // if (exists.indexOf(index) === -1) {
                     //     exists.push(index);
                     // }
@@ -97,19 +109,19 @@ try {
         // удаляем все файлы для несущесвующих веток
         files.map((name) => {
             try {
-                fs.unlinkSync(name);
+                unlinkSync(name);
             } catch (e) {
                 console.error(e);
             }
         });
     } else {
         console.log(`vendors ${version()} --------------------------------------------------`);
-        console.log('  branch     :', params.branch);
-        console.log('  mode       :', params.mode);
-        console.log('  distPath   :', params.distPath);
-        console.log('  archPath   :', params.archPath);
-        console.log('  projectName:', params.projectName);
-        console.log('  projectPath:', params.projectPath);
+        console.log('  branch     :', branch);
+        console.log('  mode       :', mode);
+        console.log('  distPath   :', distPath);
+        console.log('  archPath   :', archPath);
+        console.log('  projectName:', projectName);
+        console.log('  projectPath:', projectPath);
         console.log('');
         console.log('  help        :', '$ node xxx/vendors -o ?');
         console.log('----------------------------------------------------------------');

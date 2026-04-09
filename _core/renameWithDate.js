@@ -1,12 +1,14 @@
-const fs = require('fs');
-const path = require('path');
+import { existsSync, renameSync } from 'fs';
+import {
+    dirname, extname, basename, join,
+} from 'path';
 
 /**
  * Переименовывает файл, добавляя дату в формате _ddmmyy
  * @param {string} fullPath - Полный или относительный путь к файлу
  */
 function renameWithDate(fullPath) {
-    if (fs.existsSync(fullPath)) {
+    if (existsSync(fullPath)) {
         const now = new Date();
 
         // Форматируем компоненты даты
@@ -17,16 +19,16 @@ function renameWithDate(fullPath) {
         const dateStr = `${dd}${mm}${yy}`;
 
         // Разбираем путь: директория, имя без расширения, само расширение
-        const dir = path.dirname(fullPath);
-        const ext = path.extname(fullPath);
-        const name = path.basename(fullPath, ext);
+        const dir = dirname(fullPath);
+        const ext = extname(fullPath);
+        const name = basename(fullPath, ext);
 
         const newName = `${name}_${dateStr}${ext}`;
-        const newPath = path.join(dir, newName);
+        const newPath = join(dir, newName);
 
         try {
-            if (!fs.existsSync(newPath)) {
-                fs.renameSync(fullPath, newPath);
+            if (!existsSync(newPath)) {
+                renameSync(fullPath, newPath);
                 return newPath;
                 // console.log(`Успешно: ${path.basename(fullPath)} -> ${newName}`);
             }
@@ -41,6 +43,4 @@ function renameWithDate(fullPath) {
     return false;
 }
 
-module.exports = {
-    renameWithDate,
-};
+export default renameWithDate;

@@ -22,8 +22,4 @@ function getArgs() {
     return args;
 }
 
-const out = getArgs();
-
-module.exports = {
-    args: out,
-};
+export default getArgs;

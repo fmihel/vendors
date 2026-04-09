@@ -1,10 +1,11 @@
-const { execSync } = require('child_process');
-const path = require('path');
+import { execSync } from 'child_process';
+import { dirname } from 'path';
+import define from './define.js';
 
 function version() {
     try {
         // Получаем последний тег
-        const cwd = path.dirname(require.main.filename);
+        const cwd = dirname(define.require_main_filename);
         const tag = execSync('git describe --tags --abbrev=0', { cwd }).toString().trim();
         return tag;
     } catch (error) {
@@ -13,6 +14,4 @@ function version() {
     return '';
 }
 
-module.exports = {
-    version,
-};
+export default version;

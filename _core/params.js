@@ -1,7 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
-const { args } = require('./args');
+import {
+    basename, join, dirname, resolve,
+} from 'path';
+import { execSync } from 'child_process';
+import args from './args.js';
+import define from './define.js';
 
 const o = args.operation ? args.operation : args.o;
 const operation = o || 'info'; // тип действия update || install || info || help || ?
@@ -10,7 +12,7 @@ const p = args.project ? args.project : args.p;
 const projectPath = p || process.cwd(); // маршрут к текущему проекту
 
 const pn = args.name ? args.name : args.n;
-const projectName = pn || path.basename(projectPath); // имя проекта в архиве
+const projectName = pn || basename(projectPath); // имя проекта в архиве
 
 const m = args.mode ? args.mode : args.m;
 const mode = m || 'prod'; // режим создания проекта
@@ -18,7 +20,7 @@ const mode = m || 'prod'; // режим создания проекта
 let distPath;
 if (mode === 'prod') {
     const d = args.dist ? args.dist : args.d;
-    distPath = d || path.join(projectPath, 'dist'); // маршрут куда распаковать
+    distPath = d || join(projectPath, 'dist'); // маршрут куда распаковать
 } else {
     distPath = projectPath;
 }
@@ -29,7 +31,7 @@ let branch;
 
 if (a) {
     archPath = a;
-    branch = path.basename(archPath);
+    branch = basename(archPath);
 } else {
     const b = args.branch ? args.branch : args.b;
     if (b) {
@@ -41,9 +43,9 @@ if (a) {
             .trim();
     }
 
-    const dirname = path.dirname(require.main.filename);
+    const namedir = dirname(define.require_main_filename);
 
-    archPath = path.resolve(path.join(dirname, projectName, mode, `${branch}.zip`));
+    archPath = resolve(join(namedir, projectName, mode, `${branch}.zip`));
     if (operation === 'install') {
         // if (!fs.existsSync(archPath)) {
         // ['main', 'master'].find((br) => {
@@ -57,7 +59,7 @@ if (a) {
     }
 }
 
-module.exports = {
+export default {
     projectPath,
     projectName,
     mode,

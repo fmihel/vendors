@@ -1,14 +1,18 @@
-const fs = require('fs');
-const path = require('path');
-const archiver = require('archiver');
+import {
+    createWriteStream, existsSync, mkdirSync, renameSync,
+} from 'fs';
+import { join, basename } from 'path';
+import archiver from 'archiver';
 
+const __dirname = import.meta.dirname;
+// console.log({ zip: import.meta.dirname, __dirname });
 async function zip(sourceDir, outName, targetDir) {
     // Формируем пути (автоматически подстраиваются под Win/Linux)
-    const tempZipPath = path.join(__dirname, outName);
-    const finalZipPath = path.join(targetDir, outName);
+    const tempZipPath = join(__dirname, outName);
+    const finalZipPath = join(targetDir, outName);
 
     // 1. Создаем поток для записи архива во временный файл
-    const output = fs.createWriteStream(tempZipPath);
+    const output = createWriteStream(tempZipPath);
     const archive = archiver('zip', { zlib: { level: 9 } });
 
     return new Promise((resolve, reject) => {
@@ -17,11 +21,11 @@ async function zip(sourceDir, outName, targetDir) {
 
             try {
                 // 2. Создаем целевую папку, если её нет
-                if (!fs.existsSync(targetDir)) {
-                    fs.mkdirSync(targetDir, { recursive: true });
+                if (!existsSync(targetDir)) {
+                    mkdirSync(targetDir, { recursive: true });
                 }
                 // 3. Перемещаем файл
-                fs.renameSync(tempZipPath, finalZipPath);
+                renameSync(tempZipPath, finalZipPath);
                 // console.log(`Архив успешно перемещен в: ${finalZipPath}`);
 
                 resolve(finalZipPath);
@@ -38,13 +42,11 @@ async function zip(sourceDir, outName, targetDir) {
         // Добавляем содержимое папки в архив
         // Второй аргумент false означает, что файлы будут в корне архива,
         // а не внутри подпапки с именем sourceDir
-        archive.directory(sourceDir, path.basename(sourceDir));
+        archive.directory(sourceDir, basename(sourceDir));
 
         // Финализируем архив
         archive.finalize();
     });
 }
 
-module.exports = {
-    zip,
-};
+export default zip;

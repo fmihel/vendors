@@ -1,4 +1,4 @@
-const { execSync } = require('child_process');
+import { execSync } from 'child_process';
 
 function branches(param = '') {
     const cwd = process.cwd();
@@ -9,4 +9,4 @@ function branches(param = '') {
         .filter(Boolean); // Удаляем пустые строки
 }
 
-module.exports = { branches };
+export default branches;

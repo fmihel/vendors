@@ -1,4 +1,4 @@
-const { execSync } = require('child_process');
+import { execSync } from 'child_process';
 
 function unzip(archPath, distPath) {
     if (process.platform === 'win32') {
@@ -10,6 +10,4 @@ function unzip(archPath, distPath) {
     }
 }
 
-module.exports = {
-    unzip,
-};
+export default unzip;
