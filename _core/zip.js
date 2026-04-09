@@ -22,8 +22,9 @@ async function zip(sourceDir, outName, targetDir) {
                 }
                 // 3. Перемещаем файл
                 fs.renameSync(tempZipPath, finalZipPath);
-                console.log(`Архив успешно перемещен в: ${finalZipPath}`);
-                resolve();
+                // console.log(`Архив успешно перемещен в: ${finalZipPath}`);
+
+                resolve(finalZipPath);
             } catch (err) {
                 reject(err);
             }

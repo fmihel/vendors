@@ -27,17 +27,18 @@ function renameWithDate(fullPath) {
         try {
             if (!fs.existsSync(newPath)) {
                 fs.renameSync(fullPath, newPath);
-                console.log(`Успешно: ${path.basename(fullPath)} -> ${newName}`);
-            } else {
-                console.log(`${newPath} уже существует, не пересоздаю`);
+                return newPath;
+                // console.log(`Успешно: ${path.basename(fullPath)} -> ${newName}`);
             }
+            console.log(`${newPath} уже существует, не пересоздаю`);
+
             // return newPath; // Возвращаем новый путь для дальнейшей работы
         } catch (err) {
             console.error(`Ошибка при переименовании: ${err.message}`);
             throw err;
         }
     }
-    // return '';
+    return false;
 }
 
 module.exports = {
