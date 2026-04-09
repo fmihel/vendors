@@ -17,7 +17,7 @@ async function zip(sourceDir, outName, targetDir) {
 
     return new Promise((resolve, reject) => {
         output.on('close', async () => {
-            console.log(`Архив создан: ${archive.pointer()} байт`);
+            // console.log(`Архив создан: ${archive.pointer()} байт`);
 
             try {
                 // 2. Создаем целевую папку, если её нет

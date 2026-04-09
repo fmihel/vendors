@@ -22,4 +22,4 @@ function getArgs() {
     return args;
 }
 
-export default getArgs;
+export default getArgs();

@@ -26,19 +26,19 @@ function renameWithDate(fullPath) {
         const newName = `${name}_${dateStr}${ext}`;
         const newPath = join(dir, newName);
 
-        try {
-            if (!existsSync(newPath)) {
-                renameSync(fullPath, newPath);
-                return newPath;
-                // console.log(`Успешно: ${path.basename(fullPath)} -> ${newName}`);
-            }
-            console.log(`${newPath} уже существует, не пересоздаю`);
-
-            // return newPath; // Возвращаем новый путь для дальнейшей работы
-        } catch (err) {
-            console.error(`Ошибка при переименовании: ${err.message}`);
-            throw err;
+        // try {
+        if (!existsSync(newPath)) {
+            renameSync(fullPath, newPath);
+            return newPath;
+            // console.log(`Успешно: ${path.basename(fullPath)} -> ${newName}`);
         }
+        console.log(`  ${newPath} уже существует, не пересоздаю`);
+
+        // return newPath; // Возвращаем новый путь для дальнейшей работы
+        // } catch (err) {
+        // console.error(`Ошибка при переименовании: ${err.message}`);
+        // throw err;
+        // }
     }
     return false;
 }

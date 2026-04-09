@@ -1,9 +1,8 @@
 /* eslint-disable prefer-destructuring */
 import {
-    existsSync, mkdirSync, readdirSync, unlinkSync,
+    existsSync, mkdirSync, readdirSync, renameSync, unlinkSync,
 } from 'fs';
 import { join, dirname, extname } from 'path';
-import { fileURLToPath } from 'url';
 import params from './_core/params.js';
 import unzip from './_core/unzip.js';
 import zip from './_core/zip.js';
@@ -11,6 +10,7 @@ import renameWithDate from './_core/renameWithDate.js';
 import version from './_core/version.js';
 import branches from './_core/branches.js';
 import define from './_core/define.js';
+import compareFiles from './_core/compareFiles.js';
 
 const {
     operation, branch, mode, archPath, distPath, projectName, projectPath,
@@ -37,8 +37,6 @@ const {
 // путь к папке где запускаем
 // process.cwd();
 
-define.require_main_filename = import.meta.filename;
-
 try {
     if (operation === 'install') {
         console.log('vendors install ----------');
@@ -62,14 +60,39 @@ try {
         console.log('  mode   :', mode);
         console.log('  from   :', distPath);
         console.log('  to     :', archPath);
-        console.log('--------------------------');
 
-        renameWithDate(archPath);
-        zip(
+        // const backup = renameWithDate(archPath);
+        // создаем новый архив
+        const newFile = await zip(
             join(distPath, 'vendor'),
-            `${branch}.zip`,
+            `${branch}-new.zip`,
             dirname(archPath),
         );
+
+        const currentFile = join(dirname(archPath), `${branch}.zip`); // текущий файл
+
+        let status = 'undef';
+        if (existsSync(currentFile)) {
+            // сравниваем текущий и новый
+            const isEqual = await compareFiles(currentFile, newFile);
+            if (isEqual) {
+                // равны, то новая копия не нужна
+                unlinkSync(newFile);
+                status = 'no need to update';
+            } else {
+                // создаем backup
+                const backup = renameWithDate(archPath);
+                // новый переименовываем в текущий
+                renameSync(newFile, currentFile);
+                status = `update : ${currentFile}`;
+            }
+        } else {
+            renameSync(newFile, currentFile);
+            status = `create : ${currentFile}`;
+        }
+        console.log('');
+        console.log(`result   : ok ( ${status} )`);
+        console.log('--------------------------');
     } else if (operation === 'help' || operation === '?') {
         console.log(`vendors ${version()} help ---------------------------------------------`);
         console.log('полный список опций');
